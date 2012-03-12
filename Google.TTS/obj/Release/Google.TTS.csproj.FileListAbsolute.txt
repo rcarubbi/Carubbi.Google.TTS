@@ -1,0 +1,5 @@
+F:\bkp\C#\Projects\Google.TTS\Google.TTS\bin\Release\Google.TTS.dll
+F:\bkp\C#\Projects\Google.TTS\Google.TTS\bin\Release\Google.TTS.pdb
+F:\bkp\C#\Projects\Google.TTS\Google.TTS\obj\Release\ResolveAssemblyReference.cache
+F:\bkp\C#\Projects\Google.TTS\Google.TTS\obj\Release\Google.TTS.dll
+F:\bkp\C#\Projects\Google.TTS\Google.TTS\obj\Release\Google.TTS.pdb
