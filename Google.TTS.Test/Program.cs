@@ -11,7 +11,8 @@ namespace Google.TTS.Test
         {
             Console.WriteLine("Digite a frase:");
             string texto = Console.ReadLine();
-            TTSHelper.ReproduzirSincrono(texto);
+
+            TTSHelper.ReproduzirSincrono(texto, Idioma.Portugues);
         }   
     }
 }
