@@ -33,7 +33,7 @@ namespace Google.TTS
         }
 
         private static HttpWebRequest _request;
-        private const string URL_TTS_GOOGLE = "http://translate.google.com/translate_tts?tl={1}&q={0}";
+        private const string URL_TTS_GOOGLE = "http://translate.google.com/translate_tts?ie=UTF&tl={1}&q={0}&client=tw-ob";
 
 
         public static string ProxyPath
