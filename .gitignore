@@ -4,3 +4,4 @@
 
 /.vs/Google.TTS/v15/Server/sqlite3
 /Google.TTS/obj/Release
+/Google.TTS.Test/obj/Release

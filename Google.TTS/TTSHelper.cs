@@ -158,8 +158,8 @@ namespace Google.TTS
           
             if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded)
             {
-                File.Delete(arquivos.First());
-                arquivos.RemoveAt(0);
+                File.Delete(Arquivos.First());
+                Arquivos.RemoveAt(0);
             }
             else if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsStopped || (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsReady)
             {
@@ -177,18 +177,18 @@ namespace Google.TTS
             Reproduzir(texto, idioma, false);
         }
 
-        private static readonly List<string> arquivos = new List<string>();
+        private static readonly List<string> Arquivos = new List<string>();
         private static void Reproduzir(string texto, Idioma idioma, bool esperar)
         {
             var trechos = SepararTrechos(texto, 12).ToList();
-            arquivos.Clear();
+            Arquivos.Clear();
             foreach (var trecho in trechos)
             {
-                arquivos.Add(GerarArquivo(trecho, idioma));
+                Arquivos.Add(GerarArquivo(trecho, idioma));
             }
-            var playerProcess = new Thread(new ParameterizedThreadStart(ReproduzirArquivo));
+            var playerProcess = new Thread(ReproduzirArquivo);
 
-            playerProcess.Start(arquivos);
+            playerProcess.Start(Arquivos);
             Thread.Sleep(1000);
             while (esperar && !_idle)
             {
