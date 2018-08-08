@@ -155,7 +155,7 @@ namespace Google.TTS
 
         private static void _wplayer_PlayStateChange(int NewState)
         {
-            Console.WriteLine(((WMPLib.WMPPlayState)NewState).ToString());
+          
             if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded)
             {
                 File.Delete(arquivos.First());

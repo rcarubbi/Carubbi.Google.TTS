@@ -1,5 +1,0 @@
-F:\bkp\C#\Projects\Google.TTS\Google.TTS\bin\Debug\Google.TTS.dll
-F:\bkp\C#\Projects\Google.TTS\Google.TTS\bin\Debug\Google.TTS.pdb
-F:\bkp\C#\Projects\Google.TTS\Google.TTS\obj\Debug\ResolveAssemblyReference.cache
-F:\bkp\C#\Projects\Google.TTS\Google.TTS\obj\Debug\Google.TTS.dll
-F:\bkp\C#\Projects\Google.TTS\Google.TTS\obj\Debug\Google.TTS.pdb
