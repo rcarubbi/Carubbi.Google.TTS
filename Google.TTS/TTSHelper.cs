@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
 using System.IO;
-using System.Web;
-using System.Runtime.InteropServices;
+using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading;
+
 namespace Google.TTS
 {
     public enum Idioma
@@ -20,11 +19,11 @@ namespace Google.TTS
         ItauProxy
     }
 
-    public class TTSHelper
+    public class TtsHelper
     {
         private static void CopyStream(Stream input, Stream output)
         {
-            byte[] buffer = new byte[8 * 1024];
+            var buffer = new byte[8 * 1024];
             int len;
             while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
             {
@@ -62,8 +61,8 @@ namespace Google.TTS
 
         public static string GerarArquivo(string texto, Idioma idioma)
         {
-            string strIdioma = idioma == Idioma.Portugues ? "pt" : "en";
-            Uri url = new Uri(string.Format(URL_TTS_GOOGLE, texto, strIdioma));
+            var strIdioma = idioma == Idioma.Portugues ? "pt" : "en";
+            var url = new Uri(string.Format(URL_TTS_GOOGLE, texto, strIdioma));
             PrepareRequest(url);
             WebResponse response = null;
             try
@@ -79,7 +78,10 @@ namespace Google.TTS
                     response = _request.GetResponse();
                 }
             }
-            Stream fileContent = response.GetResponseStream();
+
+            if (response == null) return null;
+
+            var fileContent = response.GetResponseStream();
             var caminhoTemp = Path.ChangeExtension(Path.GetTempFileName(), ".mp3");
 
             using (Stream file = File.OpenWrite(caminhoTemp))
@@ -89,21 +91,23 @@ namespace Google.TTS
                 file.Close();
             }
 
+            if (fileContent == null) return caminhoTemp;
             fileContent.Close();
             fileContent.Dispose();
 
             return caminhoTemp;
+
         }
 
         private static void PrepareRequest(Uri url)
         {
             if (ProxyMethod.HasValue && ProxyMethod.Value == Google.TTS.ProxyMethod.ItauProxy)
             {
-                byte[] urlBytes = Encoding.UTF8.GetBytes(url.AbsolutePath.ToCharArray());
-                _request = (HttpWebRequest)HttpWebRequest.Create(string.Format(ProxyPath, Convert.ToBase64String(urlBytes)));
+                var urlBytes = Encoding.UTF8.GetBytes(url.AbsolutePath.ToCharArray());
+                _request = (HttpWebRequest)WebRequest.Create(string.Format(ProxyPath, Convert.ToBase64String(urlBytes)));
                 _request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
 
-                byte[] authBytes = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", ProxyUserName, ProxyPassword).ToCharArray());
+                var authBytes = Encoding.UTF8.GetBytes($"{ProxyUserName}:{ProxyPassword}".ToCharArray());
                 _request.Headers["Authorization"] = "Basic " + Convert.ToBase64String(authBytes);
                 _request.KeepAlive = true;
                 _request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
@@ -113,7 +117,7 @@ namespace Google.TTS
             }
             else
             {
-                _request = (HttpWebRequest)HttpWebRequest.Create(url);
+                _request = (HttpWebRequest)WebRequest.Create(url);
                 _request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
                 _request.UseDefaultCredentials = true;
             }
@@ -122,33 +126,34 @@ namespace Google.TTS
 
         public static void ReproduzirArquivo(object parameter)
         {
-            idle = false;
+            _idle = false;
 
-            List<String> arquivos = (List<String>)parameter;
+            var faixas = (List<string>)parameter;
 
             _wplayer = new WMPLib.WindowsMediaPlayer();
-            var _playlist = _wplayer.playlistCollection.newPlaylist("playlist");
-            foreach (var arquivo in arquivos)
+            var playlist = _wplayer.playlistCollection.newPlaylist("playlist");
+            foreach (var faixa in faixas)
             {
-                WMPLib.IWMPMedia media = _wplayer.newMedia(Path.Combine(Path.GetTempPath(), arquivo));
-                _playlist.appendItem(media);
+                var media = _wplayer.newMedia(Path.Combine(Path.GetTempPath(), faixa));
+                playlist.appendItem(media);
             }
-            _wplayer.currentPlaylist = _playlist;
-            _wplayer.PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(_wplayer_PlayStateChange);
-            _wplayer.MediaError += new WMPLib._WMPOCXEvents_MediaErrorEventHandler(_wplayer_MediaError);
+            _wplayer.currentPlaylist = playlist;
+            _wplayer.PlayStateChange += _wplayer_PlayStateChange;
+            _wplayer.MediaError += _wplayer_MediaError;
             _wplayer.controls.play();
 
 
         }
 
-        static void _wplayer_MediaError(object pMediaObject)
+        private static void _wplayer_MediaError(object pMediaObject)
         {
             throw new Exception("Erro ao tentar reproduzir arquivo");
         }
 
-        static object locker = new object();
-        static bool idle = true;
-        static void _wplayer_PlayStateChange(int NewState)
+        static object _locker = new object();
+        static bool _idle = true;
+
+        private static void _wplayer_PlayStateChange(int NewState)
         {
             Console.WriteLine(((WMPLib.WMPPlayState)NewState).ToString());
             if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded)
@@ -158,7 +163,7 @@ namespace Google.TTS
             }
             else if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsStopped || (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsReady)
             {
-                idle = true;
+                _idle = true;
             }
         }
 
@@ -172,20 +177,20 @@ namespace Google.TTS
             Reproduzir(texto, idioma, false);
         }
 
-        private static List<String> arquivos = new List<string>();
+        private static readonly List<string> arquivos = new List<string>();
         private static void Reproduzir(string texto, Idioma idioma, bool esperar)
         {
-            List<String> trechos = SepararTrechos(texto, 12).ToList();
+            var trechos = SepararTrechos(texto, 12).ToList();
             arquivos.Clear();
             foreach (var trecho in trechos)
             {
                 arquivos.Add(GerarArquivo(trecho, idioma));
             }
-            Thread playerProcess = new Thread(new ParameterizedThreadStart(ReproduzirArquivo));
+            var playerProcess = new Thread(new ParameterizedThreadStart(ReproduzirArquivo));
 
             playerProcess.Start(arquivos);
             Thread.Sleep(1000);
-            while (esperar && !idle)
+            while (esperar && !_idle)
             {
                 Thread.Sleep(1000);
             }
@@ -195,8 +200,8 @@ namespace Google.TTS
         {
 
             var palavras = texto.Split(' ');
-            int countMaxWords = 0;
-            StringBuilder stbTrecho = new StringBuilder();
+            var countMaxWords = 0;
+            var stbTrecho = new StringBuilder();
             foreach (var palavra in palavras)
             {
                 if (countMaxWords == 0)

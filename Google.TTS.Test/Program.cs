@@ -12,7 +12,7 @@ namespace Google.TTS.Test
             Console.WriteLine("Digite a frase:");
             string texto = Console.ReadLine();
 
-            TTSHelper.ReproduzirSincrono(texto, Idioma.Portugues);
+            TtsHelper.ReproduzirSincrono(texto, Idioma.Portugues);
         }   
     }
 }
