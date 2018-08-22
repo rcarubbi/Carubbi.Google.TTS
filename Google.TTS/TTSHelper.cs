@@ -14,11 +14,6 @@ namespace Google.TTS
         Ingles
     }
 
-    public enum ProxyMethod
-    {
-        ItauProxy
-    }
-
     public class TtsHelper
     {
         private static void CopyStream(Stream input, Stream output)
@@ -53,33 +48,23 @@ namespace Google.TTS
             set;
         }
 
-        public static ProxyMethod? ProxyMethod
-        {
-            get;
-            set;
-        }
+
 
         public static string GerarArquivo(string texto, Idioma idioma)
         {
             var strIdioma = idioma == Idioma.Portugues ? "pt" : "en";
             var url = new Uri(string.Format(URL_TTS_GOOGLE, texto, strIdioma));
             PrepareRequest(url);
-            WebResponse response = null;
+            WebResponse response;
             try
             {
                 response = _request.GetResponse();
             }
             catch
             {
-                if (ProxyMethod.HasValue && ProxyMethod.Value == Google.TTS.ProxyMethod.ItauProxy)
-                {
-                    ProxyMethod = null;
-                    PrepareRequest(url);
-                    response = _request.GetResponse();
-                }
+                PrepareRequest(url);
+                response = _request.GetResponse();
             }
-
-            if (response == null) return null;
 
             var fileContent = response.GetResponseStream();
             var caminhoTemp = Path.ChangeExtension(Path.GetTempFileName(), ".mp3");
@@ -101,27 +86,11 @@ namespace Google.TTS
 
         private static void PrepareRequest(Uri url)
         {
-            if (ProxyMethod.HasValue && ProxyMethod.Value == Google.TTS.ProxyMethod.ItauProxy)
-            {
-                var urlBytes = Encoding.UTF8.GetBytes(url.AbsolutePath.ToCharArray());
-                _request = (HttpWebRequest)WebRequest.Create(string.Format(ProxyPath, Convert.ToBase64String(urlBytes)));
-                _request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
-
-                var authBytes = Encoding.UTF8.GetBytes($"{ProxyUserName}:{ProxyPassword}".ToCharArray());
-                _request.Headers["Authorization"] = "Basic " + Convert.ToBase64String(authBytes);
-                _request.KeepAlive = true;
-                _request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-                _request.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
-                _request.Headers["Cookie"] = "BCSI-CS-578f1ddf35ea416c=2";
-
-            }
-            else
-            {
-                _request = (HttpWebRequest)WebRequest.Create(url);
-                _request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
-                _request.UseDefaultCredentials = true;
-            }
+            _request = (HttpWebRequest)WebRequest.Create(url);
+            _request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
+            _request.UseDefaultCredentials = true;
         }
+
         private static WMPLib.WindowsMediaPlayer _wplayer;
 
         public static void ReproduzirArquivo(object parameter)
@@ -150,18 +119,18 @@ namespace Google.TTS
             throw new Exception("Erro ao tentar reproduzir arquivo");
         }
 
-        static object _locker = new object();
-        static bool _idle = true;
+        private static object _locker = new object();
+        private static bool _idle = true;
 
-        private static void _wplayer_PlayStateChange(int NewState)
+        private static void _wplayer_PlayStateChange(int newState)
         {
-          
-            if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded)
+
+            if ((WMPLib.WMPPlayState)newState == WMPLib.WMPPlayState.wmppsMediaEnded)
             {
                 File.Delete(Arquivos.First());
                 Arquivos.RemoveAt(0);
             }
-            else if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsStopped || (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsReady)
+            else if ((WMPLib.WMPPlayState)newState == WMPLib.WMPPlayState.wmppsStopped || (WMPLib.WMPPlayState)newState == WMPLib.WMPPlayState.wmppsReady)
             {
                 _idle = true;
             }
@@ -198,7 +167,6 @@ namespace Google.TTS
 
         private static IEnumerable<string> SepararTrechos(string texto, int maxWords)
         {
-
             var palavras = texto.Split(' ');
             var countMaxWords = 0;
             var stbTrecho = new StringBuilder();
