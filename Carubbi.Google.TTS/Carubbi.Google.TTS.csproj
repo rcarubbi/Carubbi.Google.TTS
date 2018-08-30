@@ -45,9 +45,8 @@
       <HintPath>..\packages\Carubbi.Extensions.1.1.0.0\lib\net472\Carubbi.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Interop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\Referencias\Interop.WMPLib.dll</HintPath>
+      <HintPath>..\Libs\Interop.WMPLib.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
@@ -71,7 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Google.TTS.nuspec">
+    <None Include="Carubbi.Google.TTS.nuspec">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />

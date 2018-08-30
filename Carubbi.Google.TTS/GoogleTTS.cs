@@ -9,7 +9,7 @@ using WMPLib;
 
 namespace Carubbi.Google.TTS
 {
- 
+
     public static class GoogleTTS
     {
         private const string GOOGLE_TTS_URL_BASE = "http://translate.google.com/translate_tts";
@@ -74,34 +74,9 @@ namespace Carubbi.Google.TTS
             _wplayer.controls.play();
         }   
 
-        private static void WaitToEnd()
-        {
-            Thread.Sleep(200);
-            while (!_idle)
-            {
-                Thread.Sleep(1000);
-            }
-        }
+        
 
-        /// <summary>
-        /// Convert a text to audio and play synchronously
-        /// </summary>
-        /// <param name="text">Content to be transformed</param>
-        /// <param name="language">Language of the audio</param>
-        public static void Play(string text, Language language)
-        {
-            Play(text, language, false);
-        }
-
-        /// <summary>
-        /// Convert a text to audio and play asynchronously
-        /// </summary>
-        /// <param name="text">Content to be transformed</param>
-        /// <param name="language">Language of the audio</param>
-        public static void AsyncPlay(string text, Language language)
-        {
-            Play(text, language, true);
-        }
+     
 
         private static string ParseCulture(Language language)
         {
@@ -158,8 +133,13 @@ namespace Carubbi.Google.TTS
                     throw new ArgumentOutOfRangeException();
             }
         }
-       
-        private static void Play(string text, Language language, bool isAsync)
+
+        /// <summary>
+        /// Convert a text to audio and play synchronously
+        /// </summary>
+        /// <param name="text">Content to be transformed</param>
+        /// <param name="language">Language of the audio</param>
+        public static void Play(string text, Language language)
         {
             var chunks = SplitText(text, 12).ToList();
             _trackList.Clear();
@@ -169,9 +149,7 @@ namespace Carubbi.Google.TTS
             }
             var playerProcess = new Thread(() => PlayFiles(_trackList));
             playerProcess.Start();
-
-            if (!isAsync) WaitToEnd();
-       
+ 
         }
 
         private static IEnumerable<string> SplitText(string text, int maxWords)

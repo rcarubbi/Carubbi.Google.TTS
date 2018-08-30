@@ -6,25 +6,20 @@ namespace Carubbi.Google.TTS.Test
     {
         private static void Main(string[] args)
         {
-            WriteLine("Type in english:");
-            var text = ReadLine();
 
-            GoogleTTS.Play(text, Language.English);
+            while (true)
+            {
+                WriteLine("Type in english:");
+                var text = ReadLine();
 
-            WriteLine("Escreva em português:");
-            text = ReadLine();
+                GoogleTTS.Play(text, Language.English);
 
-            GoogleTTS.Play(text, Language.BrazilianPortuguese);
+                WriteLine("Escreva em português:");
+                text = ReadLine();
 
-            WriteLine("Escreva em português (assíncrono):");
-            text = ReadLine();
+                GoogleTTS.Play(text, Language.BrazilianPortuguese);
+            }
 
-            GoogleTTS.AsyncPlay(text, Language.BrazilianPortuguese);
-
-            WriteLine("Type in english (async):");
-            text = ReadLine();
-            GoogleTTS.AsyncPlay(text, Language.English);
-            ReadKey();
-        }   
+        }
     }
 }

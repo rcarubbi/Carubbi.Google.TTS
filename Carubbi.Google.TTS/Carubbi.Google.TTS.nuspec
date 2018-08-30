@@ -12,9 +12,6 @@
     <copyright>Copyright Carubbi Consultoria e Tecnologia 2015</copyright>
     <tags>TTS, google, text-to-speech</tags>
   </metadata>
-  <files>
-    <file src="bin\Release\Interop.WMPLib.dll" target="lib\net35" />
-  </files>
 </package>
 
 
