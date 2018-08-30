@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Carubbi.Google.TTS</id>
+    <id>$id$</id>
     <version>$version$</version>
     <title>$title$</title>
     <authors>Raphael Carubbi Neto</authors>
@@ -12,6 +12,9 @@
     <copyright>Copyright Carubbi Consultoria e Tecnologia 2015</copyright>
     <tags>TTS, google, text-to-speech</tags>
   </metadata>
+  <files>
+    <file src="bin\Release\Interop.WMPLib.dll" target="lib\net35" />
+  </files>
 </package>
 
 

@@ -1,9 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.TTS", "Google.TTS\Google.TTS.csproj", "{9EDE8635-0565-41C2-874C-B57BB01F40B3}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carubbi.Google.TTS", "Carubbi.Google.TTS\Carubbi.Google.TTS.csproj", "{9EDE8635-0565-41C2-874C-B57BB01F40B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.TTS.Test", "Google.TTS.Test\Google.TTS.Test.csproj", "{50B57AA2-050D-43AD-A29E-B9116EAE75F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carubbi.Google.TTS.Test", "Carubbi.Google.TTS.Test\Carubbi.Google.TTS.Test.csproj", "{50B57AA2-050D-43AD-A29E-B9116EAE75F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {94AB1D5E-BB03-493A-86D5-0A25B0DC456A}
 	EndGlobalSection
 EndGlobal
